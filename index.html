@@ -1,51 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Trade Path San Mateo — Careers Without a 4-Year Degree</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
 
-Trade Path San Mateo
-Browse Careers Career Quiz Compare
-Español
-Your career. No 4-year degree required.
-Twenty high-paying careers you can start from any San Mateo County high school — sourced from BLS wage data, verified local college programs, and real Bay Area union apprenticeships. Take the quiz to find your best match, or browse all careers.
-20
-Career paths
-$25k–$131k
-National BLS salary range
-3 colleges
-Plus Bay Area union apprenticeships
-Category: All careers Construction & Energy Healthcare Clean Energy Automotive Beauty & Wellness Technology Animal Care Culinary & Hospitality
-Sort:
-          Featured
-          Highest salary
-          Quickest to hire
-        
+<header class="site-header">
+  <div class="logo" id="home-logo" role="button" tabindex="0" aria-label="Go to home">
+    <div class="logo-icon"><i class="ti ti-tool"></i></div>
+    Trade Path San Mateo
+  </div>
+  <div class="header-tabs">
+    <button class="tab-btn active" data-section="browse" data-i18n="tabBrowse">Browse Careers</button>
+    <button class="tab-btn" data-section="quiz" data-i18n="tabQuiz">Career Quiz</button>
+    <button class="tab-btn" data-section="compare" data-i18n="tabCompare">Compare</button>
+  </div>
+  <button class="lang-toggle" id="lang-toggle" data-i18n="langToggle">Español</button>
+</header>
 
+<main class="page-wrap">
 
+  <section class="hero">
+    <h1 data-i18n="heroTitle">Your career. No 4-year degree required.</h1>
+    <p data-i18n="heroText">Twenty high-paying careers you can start from any San Mateo County high school — sourced from BLS wage data, verified local college programs, and real Bay Area union apprenticeships. Take the quiz to find your best match, or browse all careers.</p>
+    <div class="hero-stats">
+      <div><div class="hstat-num">20</div><div class="hstat-label" data-i18n="heroStatPaths">Career paths</div></div>
+      <div><div class="hstat-num">$25k–$131k</div><div class="hstat-label" data-i18n="heroStatSalary">National BLS salary range</div></div>
+      <div><div class="hstat-num">3 colleges</div><div class="hstat-label" data-i18n="heroStatSchools">Plus Bay Area union apprenticeships</div></div>
+    </div>
+  </section>
 
+  <!-- ── BROWSE ── -->
+  <div class="section active" id="section-browse">
+    <div class="filter-bar">
+      <span class="filter-label" data-i18n="categoryLabel">Category:</span>
+      <button class="chip active" data-cat="All">All careers</button>
+      <button class="chip" data-cat="Construction &amp; Energy">Construction &amp; Energy</button>
+      <button class="chip" data-cat="Healthcare">Healthcare</button>
+      <button class="chip" data-cat="Clean Energy">Clean Energy</button>
+      <button class="chip" data-cat="Automotive">Automotive</button>
+      <button class="chip" data-cat="Beauty &amp; Wellness">Beauty &amp; Wellness</button>
+      <button class="chip" data-cat="Technology">Technology</button>
+      <button class="chip" data-cat="Animal Care">Animal Care</button>
+      <button class="chip" data-cat="Culinary &amp; Hospitality">Culinary &amp; Hospitality</button>
+      <div class="sort-wrap">
+        <span data-i18n="sortLabel">Sort:</span>
+        <select class="sort-select" id="sort-sel">
+          <option value="default" data-i18n="sortFeatured">Featured</option>
+          <option value="salary" data-i18n="sortSalary">Highest salary</option>
+          <option value="fast" data-i18n="sortFast">Quickest to hire</option>
+        </select>
+      </div>
+    </div>
+    <div class="career-grid" id="career-grid"></div>
+  </div>
 
-Compare:
+  <!-- ── QUIZ ── -->
+  <div class="section" id="section-quiz">
+    <div class="quiz-wrap" id="quiz-wrap">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div id="quiz-body"></div>
+    </div>
+  </div>
 
-Compare →
+  <!-- ── COMPARE ── -->
+  <div class="section" id="section-compare">
+    <div id="compare-content"></div>
+  </div>
 
+</main>
 
+<!-- Compare bar -->
+<div class="compare-bar" id="compare-bar">
+  <span class="cb-label" data-i18n="compareLabel">Compare:</span>
+  <div class="cb-items" id="cb-items"></div>
+  <button class="cb-compare-btn" id="cb-go" disabled>Compare →</button>
+</div>
 
+<!-- Career detail overlay -->
+<div class="detail-overlay" id="detail-overlay">
+  <div class="detail-panel" id="detail-panel">
+    <button class="d-close" id="d-close"><i class="ti ti-x"></i></button>
+    <div class="d-header">
+      <div class="d-emoji" id="d-emoji"></div>
+      <div>
+        <div class="d-title" id="d-title"></div>
+        <div class="d-tagline" id="d-tagline"></div>
+        <div class="d-badges" id="d-badges"></div>
+      </div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-coin"></i> <span data-i18n="salarySnapshot">Salary snapshot (BLS)</span></div>
+      <div class="salary-3">
+        <div class="sal-card"><div class="sal-amt" id="d-s-entry"></div><div class="sal-lbl" data-i18n="entryLevel">Entry-level</div></div>
+        <div class="sal-card"><div class="sal-amt" id="d-s-mid"></div><div class="sal-lbl" data-i18n="median">Median</div></div>
+        <div class="sal-card"><div class="sal-amt" id="d-s-top"></div><div class="sal-lbl" data-i18n="experienced">Experienced</div></div>
+      </div>
+      <p style="font-size:12px;color:var(--gray-400);margin-top:8px" id="d-sal-note"></p>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-school"></i> <span data-i18n="realSchools">Real schools &amp; programs</span></div>
+      <div class="path-cards" id="d-paths"></div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-list-numbers"></i> <span data-i18n="stepByStep">Step-by-step from a San Mateo high school</span></div>
+      <ol class="steps-list" id="d-steps"></ol>
+    </div>
+    <div class="d-section" id="d-quote-block"></div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-building"></i> <span data-i18n="localEmployers">Local employers who hire</span></div>
+      <div class="chips-row" id="d-employers"></div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-star"></i> <span data-i18n="keySkills">Key skills</span></div>
+      <div class="chips-row" id="d-skills"></div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><i class="ti ti-trending-up"></i> <span data-i18n="jobOutlook">Job outlook</span></div>
+      <div class="outlook-box"><i class="ti ti-chart-bar"></i><span id="d-outlook"></span></div>
+    </div>
+    <!-- Live job listings -->
+    <div class="d-section jobs-section">
+      <div class="d-section-title"><i class="ti ti-briefcase"></i> <span data-i18n="openJobs">Open jobs near San Mateo right now</span></div>
+      <div id="d-jobs"></div>
+    </div>
+  </div>
+</div>
 
-Salary snapshot (BLS)
+<footer class="site-footer">
+  <span id="site-footer-text">A community project for San Mateo County · Salary &amp; outlook data: <a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">BLS Occupational Outlook Handbook</a> (May 2024 data) and O*NET/EDD regional wage data · Career breadth informed by <a href="https://www.trade-schools.net" target="_blank" rel="noopener">trade-schools.net</a> · Program details verified directly with College of San Mateo, Skyline College, Cañada College, and partner apprenticeship/union programs · Every quote and stat links to its source in the career detail panel</span>
+</footer>
 
-Entry-level
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script>
+// ─────────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────────
+const fmt = n => "$" + Math.round(n / 1000) + "k";
+const fmtK = n => n >= 1000 ? Math.round(n / 1000) + "k" : n;
 
-Median
+// ─────────────────────────────────────────────────
+// i18n
+// ─────────────────────────────────────────────────
+let currentLang = localStorage.getItem("lang") || "en";
+let currentDetailCareer = null;
 
-Experienced
+const t = key => (UI_STRINGS[currentLang] && UI_STRINGS[currentLang][key]) || UI_STRINGS.en[key] || key;
+const tf = (key, vars) => {
+  let s = t(key);
+  Object.keys(vars || {}).forEach(k => { s = s.replace("{" + k + "}", vars[k]); });
+  return s;
+};
+const L = (c, field) => (currentLang === "es" && c.es && c.es[field] !== undefined) ? c.es[field] : c[field];
+const catLabel = cat => currentLang === "es" ? (CATEGORY_ES[cat] || cat) : cat;
+const pathTypeLabel = type => currentLang === "es" ? (PATH_TYPE_ES[type] || type.toUpperCase()) : type.toUpperCase();
+function demandLabel(demandKey) {
+  const base = DEMAND_LABELS[demandKey] || DEMAND_LABELS.high;
+  return currentLang === "es" ? (DEMAND_LABEL_ES[demandKey] || base.label) : base.label;
+}
+function localizedPaths(c) {
+  if (currentLang !== "es" || !c.es || !c.es.paths) return c.paths;
+  return c.paths.map((p, i) => ({
+    ...p,
+    duration: c.es.paths[i]?.duration ?? p.duration,
+    cost: c.es.paths[i]?.cost ?? p.cost,
+    notes: c.es.paths[i]?.notes ?? p.notes,
+  }));
+}
 
-Real schools & programs
+function applyStaticTranslations() {
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll(".chip[data-cat]").forEach(chip => {
+    chip.textContent = chip.dataset.cat === "All" ? t("allCareers") : catLabel(chip.dataset.cat);
+  });
+  const footerEl = document.getElementById("site-footer-text");
+  if (footerEl) {
+    footerEl.innerHTML = t("footerText")
+      .replace("{blsLink}", '<a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">BLS Occupational Outlook Handbook</a>')
+      .replace("{tsLink}", '<a href="https://www.trade-schools.net" target="_blank" rel="noopener">trade-schools.net</a>');
+  }
+  document.documentElement.lang = currentLang;
+  document.title = currentLang === "es"
+    ? "Trade Path San Mateo — Carreras Sin Título Universitario de 4 Años"
+    : "Trade Path San Mateo — Careers Without a 4-Year Degree";
+}
 
-Step-by-step from a San Mateo high school
-	1	
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+  applyStaticTranslations();
+  renderGrid();
+  updateCompareBar();
+  if (document.getElementById("section-compare").classList.contains("active")) renderComparePage();
+  if (document.getElementById("section-quiz").classList.contains("active")) renderQuizStep();
+  if (document.getElementById("detail-overlay").classList.contains("open") && currentDetailCareer) openDetail(currentDetailCareer);
+}
 
-Local employers who hire
+document.getElementById("lang-toggle").addEventListener("click", () => {
+  setLanguage(currentLang === "en" ? "es" : "en");
+});
 
-Key skills
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById("section-" + id).classList.add("active");
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.section === id));
+}
 
-Job outlook
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    showSection(btn.dataset.section);
+    if (btn.dataset.section === "compare") renderComparePage();
+  });
+});
 
-Open jobs near San Mateo right now
+function goHome() {
+  showSection("browse");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.getElementById("home-logo").addEventListener("click", goHome);
+document.getElementById("home-logo").addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goHome(); }
+});
 
-A community project for San Mateo County · Salary & outlook data: BLS Occupational Outlook Handbook (May 2024 data) and O*NET/EDD regional wage data · Career breadth informed by trade-schools.net · Program details verified directly with College of San Mateo, Skyline College, Cañada College, and partner apprenticeship/union programs · Every quote and stat links to its source in the career detail panel
+// ─────────────────────────────────────────────────
+// DETAIL OVERLAY
+// ─────────────────────────────────────────────────
+function openDetail(c) {
+  currentDetailCareer = c;
+  const dm = DEMAND_LABELS[c.demandLocal] || DEMAND_LABELS["high"];
+  document.getElementById("d-emoji").textContent = c.emoji;
+  document.getElementById("d-title").textContent = L(c, "title");
+  document.getElementById("d-tagline").textContent = L(c, "tagline");
+  document.getElementById("d-badges").innerHTML =
+    `<span class="badge" style="background:${dm.bg};color:${dm.color}">${demandLabel(c.demandLocal)}</span>
+     <span class="badge" style="background:var(--primary-pale);color:var(--primary)">${catLabel(c.category)}</span>
+     <span class="badge" style="background:var(--gray-50);color:var(--gray-600);border:1px solid var(--gray-200)">${L(c, "timeToJob")}</span>`;
+  document.getElementById("d-s-entry").textContent = fmt(c.salaryEntry);
+  document.getElementById("d-s-mid").textContent = fmt(c.salaryMid);
+  document.getElementById("d-s-top").textContent = fmt(c.salaryTop);
+  document.getElementById("d-sal-note").textContent = L(c, "salaryNote");
+  document.getElementById("d-paths").innerHTML = localizedPaths(c).map(p => `
+    <div class="path-card">
+      <div class="path-type">${pathTypeLabel(p.type)}</div>
+      <div class="path-name">${p.name}</div>
+      <div class="path-meta">
+        <span><i class="ti ti-map-pin"></i>${p.location}</span>
+        <span><i class="ti ti-clock"></i>${p.duration}</span>
+        <span><i class="ti ti-coin"></i>${p.cost}</span>
+      </div>
+      <div class="path-notes">${p.notes}</div>
+      <a class="path-link" href="${p.link}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>${t("visitWebsite")}</a>
+    </div>`).join("");
+  document.getElementById("d-steps").innerHTML = L(c, "steps").map(s => `
+    <li>
+      <div>
+        <div class="step-text">${s.text}</div>
+        <div class="step-detail">${s.detail}</div>
+      </div>
+    </li>`).join("");
+
+  const quoteBlock = document.getElementById("d-quote-block");
+  if (c.quoteType === "quote") {
+    quoteBlock.innerHTML = `
+      <div class="d-section-title"><i class="ti ti-quote"></i> ${t("fromSomeone")}</div>
+      <div class="quote-card">
+        <div class="quote-text">“${L(c, "quoteText")}”</div>
+        <div class="quote-author">— ${L(c, "quoteAuthor")}</div>
+        <div class="quote-source">${t("source")} <a href="${c.quoteSourceUrl}" target="_blank" rel="noopener">${c.quoteSourceLabel}</a></div>
+      </div>`;
+  } else {
+    quoteBlock.innerHTML = `
+      <div class="d-section-title"><i class="ti ti-info-circle"></i> ${t("worthKnowing")}</div>
+      <div class="fact-card">
+        <i class="ti ti-bulb"></i>
+        <div>
+          <div class="fact-text">${L(c, "quoteText")}</div>
+          <div class="fact-source">${t("source")} <a href="${c.quoteSourceUrl}" target="_blank" rel="noopener">${c.quoteSourceLabel}</a></div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById("d-employers").innerHTML = c.localEmployers.map(e => {
+    const url = EMPLOYER_LINKS[e];
+    return url
+      ? `<a class="emp-chip emp-chip-link" href="${url}" target="_blank" rel="noopener">${e}<i class="ti ti-external-link"></i></a>`
+      : `<span class="emp-chip">${e}</span>`;
+  }).join("");
+  document.getElementById("d-skills").innerHTML = L(c, "skills").map(s => `<span class="skill-chip">${s}</span>`).join("");
+  document.getElementById("d-outlook").textContent = L(c, "growthOutlook");
+
+  // Job listings
+  renderJobListings(c);
+
+  document.getElementById("detail-overlay").classList.add("open");
+  document.getElementById("detail-overlay").scrollTop = 0;
+  document.body.style.overflow = "hidden";
+}
+
+function closeDetail() {
+  document.getElementById("detail-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.getElementById("d-close").addEventListener("click", closeDetail);
+document.getElementById("detail-overlay").addEventListener("click", e => { if (e.target === document.getElementById("detail-overlay")) closeDetail(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+
+// ─────────────────────────────────────────────────
+// JOB LISTINGS
+// via Indeed RSS (CORS-accessible via rss2json proxy, free tier)
+// ─────────────────────────────────────────────────
+async function renderJobListings(career) {
+  const jobsEl = document.getElementById("d-jobs");
+  jobsEl.innerHTML = `<div class="jobs-loading"><i class="ti ti-loader" style="animation:spin 1s linear infinite;display:inline-block;margin-right:6px"></i>${t("jobsLoading")}</div>`;
+
+  const query = career.indeedQuery;
+  const location = career.indeedLocation;
+  const rssUrl = `https://www.indeed.com/rss?q=${query}&l=${location}&radius=25&sort=date`;
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&api_key=public&count=5`;
+  const localizedTitle = L(career, "title");
+
+  try {
+    const res = await fetch(apiUrl);
+    const json = await res.json();
+
+    if (!json.items || json.items.length === 0) throw new Error("No listings found");
+
+    const items = json.items.slice(0, 5);
+    jobsEl.innerHTML = items.map(item => {
+      const pub = item.pubDate ? new Date(item.pubDate).toLocaleDateString(currentLang === "es" ? "es-ES" : "en-US", {month:"short",day:"numeric"}) : "";
+      const company = item.author || extractCompany(item.title) || "Employer";
+      const title = item.title.replace(/\s*-\s*.+$/, "").trim();
+      const postedWord = currentLang === "es" ? "Publicado " : "Posted ";
+      return `
+        <div class="job-item">
+          <div class="job-logo">💼</div>
+          <div>
+            <a class="job-title" href="${item.link}" target="_blank" rel="noopener">${title}</a>
+            <div class="job-meta">${company}${pub ? " · " + postedWord + pub : ""} · San Mateo County area</div>
+          </div>
+        </div>`;
+    }).join("");
+
+    jobsEl.innerHTML += `
+      <a class="jobs-cta" href="https://www.indeed.com/jobs?q=${query}&l=San+Mateo%2C+CA" target="_blank" rel="noopener">
+        <i class="ti ti-external-link"></i> ${tf("jobsSeeAll", {title: localizedTitle})}
+      </a>
+      <p class="jobs-note">${t("jobsUpdatedNote")}</p>`;
+
+  } catch (err) {
+    // Fallback: direct link if RSS/proxy fails
+    jobsEl.innerHTML = `
+      <p style="font-size:13px;color:var(--gray-600);margin-bottom:10px">
+        ${t("jobsOfflineNote")}
+      </p>
+      <a class="jobs-cta" href="https://www.indeed.com/jobs?q=${query}&l=San+Mateo%2C+CA" target="_blank" rel="noopener">
+        <i class="ti ti-external-link"></i> ${tf("jobsSearchDirect", {title: localizedTitle})}
+      </a>`;
+  }
+}
+
+function extractCompany(title) {
+  const m = title.match(/-\s*(.+)$/);
+  return m ? m[1].trim() : "";
+}
+
+// ─────────────────────────────────────────────────
+// BROWSE / GRID
+// ─────────────────────────────────────────────────
+let activeCategory = "All";
+let selectedForCompare = new Set();
+
+function renderGrid() {
+  let list = [...CAREERS];
+  if (activeCategory !== "All") list = list.filter(c => c.category === activeCategory);
+  const sort = document.getElementById("sort-sel").value;
+  if (sort === "salary") list.sort((a, b) => b.salaryMid - a.salaryMid);
+  if (sort === "fast") list.sort((a, b) => a.timeMonths - b.timeMonths);
+
+  const grid = document.getElementById("career-grid");
+  grid.innerHTML = "";
+
+  list.forEach(c => {
+    const dm = DEMAND_LABELS[c.demandLocal] || DEMAND_LABELS["high"];
+    const checked = selectedForCompare.has(c.id);
+    const card = document.createElement("div");
+    card.className = "career-card";
+    const isMonths = c.timeMonths < 12;
+    const timeNum = isMonths ? c.timeMonths : Math.round(c.timeMonths / 12);
+    const unit = isMonths ? (timeNum === 1 ? t("unitMonth") : t("unitMonths")) : (timeNum === 1 ? t("unitYear") : t("unitYears"));
+    const title = L(c, "title");
+    card.innerHTML = `
+      <div class="card-top" data-id="${c.id}">
+        <span class="card-emoji">${c.emoji}</span>
+        <div class="card-title">${title}</div>
+        <div class="card-tagline">${L(c, "tagline")}</div>
+        <div class="card-badges">
+          <span class="badge" style="background:${dm.bg};color:${dm.color}">${demandLabel(c.demandLocal)}</span>
+          <span class="badge" style="background:var(--primary-pale);color:var(--primary)">${fmtK(c.openingsAnnualUS)} ${t("openingsPerYearUS")}</span>
+        </div>
+        <div class="salary-row">
+          <div>
+            <div class="salary-range">${fmt(c.salaryEntry)} – ${fmt(c.salaryTop)}</div>
+            <div class="salary-sub">${t("salarySubLabel")}</div>
+          </div>
+          <div class="time-badge"><i class="ti ti-clock"></i>${timeNum} ${unit} ${t("toHire")}</div>
+        </div>
+      </div>
+      <div class="compare-check-wrap">
+        <input type="checkbox" id="cmp-${c.id}" ${checked ? "checked" : ""} aria-label="${t("addToCompare")} ${title}"/>
+        <label for="cmp-${c.id}">${t("addToCompare")}</label>
+      </div>
+      <span class="card-cta">${t("exploreCareer")}</span>`;
+
+    card.querySelector(".card-top").addEventListener("click", () => openDetail(c));
+    card.querySelector(".card-cta").addEventListener("click", (e) => { e.stopPropagation(); openDetail(c); });
+
+    const chk = card.querySelector(`#cmp-${c.id}`);
+    chk.addEventListener("change", (e) => {
+      e.stopPropagation();
+      if (e.target.checked) {
+        if (selectedForCompare.size >= 3) { e.target.checked = false; alert(t("compareMaxAlert")); return; }
+        selectedForCompare.add(c.id);
+      } else {
+        selectedForCompare.delete(c.id);
+      }
+      updateCompareBar();
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById("compare-bar");
+  const itemsEl = document.getElementById("cb-items");
+  const goBtn = document.getElementById("cb-go");
+
+  if (selectedForCompare.size === 0) { bar.classList.remove("visible"); return; }
+  bar.classList.add("visible");
+
+  itemsEl.innerHTML = "";
+  selectedForCompare.forEach(id => {
+    const c = CAREERS.find(x => x.id === id);
+    if (!c) return;
+    const title = L(c, "title");
+    const chip = document.createElement("div");
+    chip.className = "cb-item";
+    chip.innerHTML = `${c.emoji} ${title}<button class="cb-remove" aria-label="Remove ${title}" data-id="${id}">×</button>`;
+    chip.querySelector(".cb-remove").addEventListener("click", () => {
+      selectedForCompare.delete(id);
+      document.querySelectorAll(`#cmp-${id}`).forEach(el => el.checked = false);
+      updateCompareBar();
+    });
+    itemsEl.appendChild(chip);
+  });
+
+  goBtn.disabled = selectedForCompare.size < 2;
+  goBtn.textContent = selectedForCompare.size >= 2 ? tf("compareGoEnabled", {n: selectedForCompare.size}) : t("compareGoDisabled");
+}
+
+document.getElementById("cb-go").addEventListener("click", () => {
+  showSection("compare");
+  renderComparePage();
+});
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", function() {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    this.classList.add("active");
+    activeCategory = this.dataset.cat;
+    renderGrid();
+  });
+});
+document.getElementById("sort-sel").addEventListener("change", renderGrid);
+
+// ─────────────────────────────────────────────────
+// COMPARE PAGE
+// ─────────────────────────────────────────────────
+function renderComparePage() {
+  const el = document.getElementById("compare-content");
+  const ids = [...selectedForCompare];
+  if (ids.length < 2) {
+    el.innerHTML = `
+      <div class="no-compare">
+        <i class="ti ti-arrows-left-right"></i>
+        <p>${t("noCompareText")}</p>
+        <button onclick="showSection('browse')" style="padding:8px 18px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-family:var(--font)">${t("browseCareersBtn")}</button>
+      </div>`;
+    return;
+  }
+
+  const careers = ids.map(id => CAREERS.find(c => c.id === id)).filter(Boolean);
+
+  const rows = [
+    { label: t("rowCategory"),       fn: c => catLabel(c.category) },
+    { label: t("rowEntrySalary"),   fn: c => fmt(c.salaryEntry),  highlight: (vals) => highlightMax(vals, v => parseInt(v.replace(/\D/g,""))) },
+    { label: t("rowMidSalary"),     fn: c => fmt(c.salaryMid),    highlight: (vals) => highlightMax(vals, v => parseInt(v.replace(/\D/g,""))) },
+    { label: t("rowTopSalary"),     fn: c => fmt(c.salaryTop),    highlight: (vals) => highlightMax(vals, v => parseInt(v.replace(/\D/g,""))) },
+    { label: t("rowTimeToHire"),   fn: c => L(c, "timeToJob").split(" ").slice(0,3).join(" "), highlight: (vals) => highlightMin(vals, v => { const m=v.match(/\d+/); return m?+m[0]:99; }) },
+    { label: t("rowAnnualOpenings"), fn: c => fmtK(c.openingsAnnualUS), highlight: (vals) => highlightMax(vals, v => parseInt(v)) },
+    { label: t("rowDemand"),         fn: c => demandLabel(c.demandLocal) },
+    { label: t("rowLicenseReq"),   fn: c => c.licenseRequired ? t("licenseYesPrefix") + L(c, "licenseBody") : t("licenseNo") },
+    { label: t("rowSchoolProgram"), fn: c => c.paths[0].school },
+    { label: t("rowProgramCost"),   fn: c => localizedPaths(c)[0].cost },
+    { label: t("rowOutlook"),        fn: c => L(c, "growthOutlook").slice(0, 80) + "…" },
+  ];
+
+  function highlightMax(vals, parse) {
+    const nums = vals.map(parse);
+    const max = Math.max(...nums);
+    return nums.map(n => n === max);
+  }
+  function highlightMin(vals, parse) {
+    const nums = vals.map(parse);
+    const min = Math.min(...nums);
+    return nums.map(n => n === min);
+  }
+
+  const colHdr = careers.map(c => `<th style="text-align:center"><div style="font-size:28px">${c.emoji}</div>${L(c, "title")}</th>`).join("");
+  const bodyRows = rows.map(row => {
+    const vals = careers.map(c => row.fn(c));
+    const highlights = row.highlight ? row.highlight(vals) : vals.map(() => false);
+    const cells = vals.map((v, i) => `<td style="text-align:center">${highlights[i] ? `<span class="compare-highlight">${v}</span>` : v}</td>`).join("");
+    return `<tr><td class="row-label">${row.label}</td>${cells}</tr>`;
+  }).join("");
+
+  el.innerHTML = `
+    <button class="compare-back-btn" onclick="showSection('browse')"><i class="ti ti-arrow-left"></i> ${t("backToBrowse")}</button>
+    <p style="font-size:13px;color:var(--gray-400);margin-bottom:.75rem">${t("highlightNote")}</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead><tr><th>${t("rowCategory")}</th>${colHdr}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--gray-400);margin-top:.5rem">${t("compareFooterNote")}</p>`;
+}
+
+// ─────────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────────
+let quizAnswers = {};
+let quizStep = 0;
+
+function initQuiz() {
+  quizAnswers = {};
+  quizStep = 0;
+  renderQuizStep();
+}
+
+function renderQuizStep() {
+  const progress = document.getElementById("quiz-progress");
+  const body = document.getElementById("quiz-body");
+  const total = QUIZ_QUESTIONS.length;
+
+  // Progress bar
+  progress.innerHTML = QUIZ_QUESTIONS.map((_, i) => {
+    const cls = i < quizStep ? "done" : i === quizStep ? "active" : "";
+    return `<div class="quiz-prog-step ${cls}"></div>`;
+  }).join("");
+
+  if (quizStep >= total) { renderQuizResults(); return; }
+
+  const q = QUIZ_QUESTIONS[quizStep];
+  const selected = quizAnswers[q.id];
+  const qText = currentLang === "es" ? q.question_es : q.question;
+
+  body.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-q-num">${tf("quizQuestionOf", {n: quizStep + 1, total})}</div>
+      <div class="quiz-q-text">${qText}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) => `
+          <div class="quiz-opt ${selected === opt.score ? "selected" : ""}" data-score="${opt.score}" data-qid="${q.id}">
+            <div class="quiz-opt-dot"></div>
+            <div class="quiz-opt-label">${currentLang === "es" ? opt.label_es : opt.label}</div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="quiz-back-btn" id="q-back" ${quizStep === 0 ? "disabled style='opacity:0.4;cursor:not-allowed'" : ""}>${t("quizBack")}</button>
+      <button class="quiz-next-btn" id="q-next" ${selected === undefined ? "disabled" : ""}>
+        ${quizStep === total - 1 ? t("quizSeeResults") : t("quizNext")} <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>`;
+
+  body.querySelectorAll(".quiz-opt").forEach(opt => {
+    opt.addEventListener("click", () => {
+      quizAnswers[q.id] = parseInt(opt.dataset.score);
+      body.querySelectorAll(".quiz-opt").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      document.getElementById("q-next").disabled = false;
+    });
+  });
+
+  document.getElementById("q-next").addEventListener("click", () => {
+    if (quizAnswers[q.id] === undefined) return;
+    quizStep++;
+    renderQuizStep();
+  });
+  document.getElementById("q-back").addEventListener("click", () => {
+    if (quizStep > 0) { quizStep--; renderQuizStep(); }
+  });
+}
+
+function renderQuizResults() {
+  // Score each career
+  const scored = CAREERS.map(c => {
+    const traits = c.quizTraits;
+    let score = 0, max = 0;
+    Object.keys(traits).forEach(key => {
+      const answer = quizAnswers[key] || 3;
+      const trait = traits[key];
+      // Score = how well they align: both high or both low = good match
+      const diff = Math.abs(answer - trait);
+      score += (5 - diff);
+      max += 5;
+    });
+    return { career: c, pct: Math.round((score / max) * 100) };
+  }).sort((a, b) => b.pct - a.pct);
+
+  const colors = scored.map((_, i) => `hsl(174, 58%, ${Math.min(20 + i * (48 / Math.max(scored.length - 1, 1)), 68)}%)`);
+
+  document.getElementById("quiz-progress").innerHTML = QUIZ_QUESTIONS.map(() =>
+    `<div class="quiz-prog-step done"></div>`).join("");
+
+  document.getElementById("quiz-body").innerHTML = `
+    <div class="quiz-results-card">
+      <div class="qr-header">
+        <i class="ti ti-award"></i>
+        <h2>${t("quizResultsTitle")}</h2>
+        <p>${t("quizResultsSub")}</p>
+      </div>
+      ${scored.map((s, i) => `
+        <div class="qr-match" style="background:${colors[i]}15;border-left:3px solid ${colors[i]}" data-id="${s.career.id}">
+          <div class="qr-rank" style="background:${colors[i]}">${i+1}</div>
+          <div class="qr-match-emoji">${s.career.emoji}</div>
+          <div class="qr-match-info">
+            <div class="qr-match-title">${L(s.career, "title")}</div>
+            <div class="qr-match-sub">${catLabel(s.career.category)} · ${fmt(s.career.salaryEntry)}–${fmt(s.career.salaryTop)}</div>
+          </div>
+          <div class="qr-match-score">
+            <div class="qr-match-pct" style="color:${colors[i]}">${s.pct}%</div>
+            <div class="qr-match-label">${t("quizMatch")}</div>
+          </div>
+        </div>`).join("")}
+    </div>
+    <button class="quiz-retry-btn" id="q-retry"><i class="ti ti-refresh"></i> ${t("quizRetry")}</button>`;
+
+  document.querySelectorAll(".qr-match").forEach(el => {
+    el.addEventListener("click", () => {
+      const c = CAREERS.find(x => x.id === el.dataset.id);
+      if (c) openDetail(c);
+    });
+  });
+  document.getElementById("q-retry").addEventListener("click", initQuiz);
+}
+
+// ─────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────
+applyStaticTranslations();
+renderGrid();
+initQuiz();
+renderComparePage();
+</script>
+</body>
+</html>
