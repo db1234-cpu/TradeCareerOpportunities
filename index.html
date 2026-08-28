@@ -18,6 +18,7 @@
     <button class="tab-btn active" data-section="browse" data-i18n="tabBrowse">Browse Careers</button>
     <button class="tab-btn" data-section="quiz" data-i18n="tabQuiz">Career Quiz</button>
     <button class="tab-btn" data-section="compare" data-i18n="tabCompare">Compare</button>
+    <button class="tab-btn" data-section="youth" data-i18n="tabYouth">Start in High School</button>
   </div>
   <button class="lang-toggle" id="lang-toggle" data-i18n="langToggle">Español</button>
 </header>
@@ -70,6 +71,11 @@
   <!-- ── COMPARE ── -->
   <div class="section" id="section-compare">
     <div id="compare-content"></div>
+  </div>
+
+  <!-- ── START IN HIGH SCHOOL ── -->
+  <div class="section" id="section-youth">
+    <div id="youth-content"></div>
   </div>
 
 </main>
@@ -137,6 +143,7 @@
 
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
+<script src="js/youth-programs.js"></script>
 <script>
 // ─────────────────────────────────────────────────
 // UTILITIES
@@ -198,6 +205,7 @@ function setLanguage(lang) {
   updateCompareBar();
   if (document.getElementById("section-compare").classList.contains("active")) renderComparePage();
   if (document.getElementById("section-quiz").classList.contains("active")) renderQuizStep();
+  if (document.getElementById("section-youth").classList.contains("active")) renderYouthPrograms();
   if (document.getElementById("detail-overlay").classList.contains("open") && currentDetailCareer) openDetail(currentDetailCareer);
 }
 
@@ -215,6 +223,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     showSection(btn.dataset.section);
     if (btn.dataset.section === "compare") renderComparePage();
+    if (btn.dataset.section === "youth") renderYouthPrograms();
   });
 });
 
@@ -260,7 +269,7 @@ function openDetail(c) {
     <li>
       <div>
         <div class="step-text">${s.text}</div>
-        <div class="step-detail">${s.detail}</div>
+        <div class="step-detail">${s.detail}${s.link ? ` <a class="step-link" href="${s.link}" target="_blank" rel="noopener">${t("learnMore")}</a>` : ""}</div>
       </div>
     </li>`).join("");
 
@@ -543,6 +552,59 @@ function renderComparePage() {
 }
 
 // ─────────────────────────────────────────────────
+// START IN HIGH SCHOOL
+// ─────────────────────────────────────────────────
+let youthCategoryFilter = "All";
+
+function youthProgramCard(p) {
+  const name = currentLang === "es" && p.es ? p.es.name : p.name;
+  const tagline = currentLang === "es" && p.es ? p.es.tagline : p.tagline;
+  const ageNote = currentLang === "es" && p.es ? p.es.ageNote : p.ageNote;
+  return `
+    <div class="youth-card">
+      <div class="youth-card-name">${name}</div>
+      <div class="youth-card-tagline">${tagline}</div>
+      <div class="youth-card-age"><i class="ti ti-user-check"></i><span><strong>${t("youthAgeLabel")}</strong> ${ageNote}</span></div>
+      <a class="youth-card-link" href="${p.link}" target="_blank" rel="noopener">${t("youthVisitProgram")}</a>
+    </div>`;
+}
+
+function renderYouthPrograms() {
+  const el = document.getElementById("youth-content");
+  const categories = [...new Set(CAREERS.map(c => c.category))];
+  const generalPrograms = YOUTH_PROGRAMS.filter(p => p.general);
+  const sectorPrograms = youthCategoryFilter === "All"
+    ? YOUTH_PROGRAMS.filter(p => !p.general)
+    : YOUTH_PROGRAMS.filter(p => !p.general && p.categories.includes(youthCategoryFilter));
+
+  const filterChips = `
+    <div class="filter-bar">
+      <span class="filter-label">${t("youthFilterLabel")}</span>
+      <button class="chip youth-filter-chip ${youthCategoryFilter === "All" ? "active" : ""}" data-cat="All">${t("allCareers")}</button>
+      ${categories.map(cat => `<button class="chip youth-filter-chip ${youthCategoryFilter === cat ? "active" : ""}" data-cat="${cat}">${catLabel(cat)}</button>`).join("")}
+    </div>`;
+
+  el.innerHTML = `
+    <div class="youth-intro">
+      <h2>${t("youthTitle")}</h2>
+      <p>${t("youthText")}</p>
+    </div>
+    <div class="youth-section-title">${t("youthGeneralHeading")}</div>
+    <div class="youth-grid">${generalPrograms.map(youthProgramCard).join("")}</div>
+    ${filterChips}
+    <div class="youth-grid">
+      ${sectorPrograms.length === 0 ? `<p class="qr-empty">${t("youthNoPrograms")}</p>` : sectorPrograms.map(youthProgramCard).join("")}
+    </div>`;
+
+  document.querySelectorAll(".youth-filter-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      youthCategoryFilter = chip.dataset.cat;
+      renderYouthPrograms();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────
 // QUIZ
 // ─────────────────────────────────────────────────
 let quizAnswers = {};
@@ -609,8 +671,10 @@ function renderQuizStep() {
   });
 }
 
+let quizCategoryFilter = "All";
+
 function renderQuizResults() {
-  // Score each career
+  // Score each career (always across the full set, regardless of filter)
   const scored = CAREERS.map(c => {
     const traits = c.quizTraits;
     let score = 0, max = 0;
@@ -625,7 +689,19 @@ function renderQuizResults() {
     return { career: c, pct: Math.round((score / max) * 100) };
   }).sort((a, b) => b.pct - a.pct);
 
-  const colors = scored.map((_, i) => `hsl(174, 58%, ${Math.min(20 + i * (48 / Math.max(scored.length - 1, 1)), 68)}%)`);
+  const displayed = quizCategoryFilter === "All"
+    ? scored
+    : scored.filter(s => s.career.category === quizCategoryFilter);
+
+  const colors = displayed.map((_, i) => `hsl(174, 58%, ${Math.min(20 + i * (48 / Math.max(displayed.length - 1, 1)), 68)}%)`);
+
+  const categories = [...new Set(CAREERS.map(c => c.category))];
+  const filterChips = `
+    <div class="qr-filter-bar">
+      <span class="qr-filter-label">${t("quizFilterLabel")}</span>
+      <button class="chip qr-filter-chip ${quizCategoryFilter === "All" ? "active" : ""}" data-cat="All">${t("quizFilterAll")}</button>
+      ${categories.map(cat => `<button class="chip qr-filter-chip ${quizCategoryFilter === cat ? "active" : ""}" data-cat="${cat}">${catLabel(cat)}</button>`).join("")}
+    </div>`;
 
   document.getElementById("quiz-progress").innerHTML = QUIZ_QUESTIONS.map(() =>
     `<div class="quiz-prog-step done"></div>`).join("");
@@ -637,7 +713,8 @@ function renderQuizResults() {
         <h2>${t("quizResultsTitle")}</h2>
         <p>${t("quizResultsSub")}</p>
       </div>
-      ${scored.map((s, i) => `
+      ${filterChips}
+      ${displayed.length === 0 ? `<p class="qr-empty">${t("quizNoMatches")}</p>` : displayed.map((s, i) => `
         <div class="qr-match" style="background:${colors[i]}15;border-left:3px solid ${colors[i]}" data-id="${s.career.id}">
           <div class="qr-rank" style="background:${colors[i]}">${i+1}</div>
           <div class="qr-match-emoji">${s.career.emoji}</div>
@@ -653,13 +730,19 @@ function renderQuizResults() {
     </div>
     <button class="quiz-retry-btn" id="q-retry"><i class="ti ti-refresh"></i> ${t("quizRetry")}</button>`;
 
+  document.querySelectorAll(".qr-filter-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      quizCategoryFilter = chip.dataset.cat;
+      renderQuizResults();
+    });
+  });
   document.querySelectorAll(".qr-match").forEach(el => {
     el.addEventListener("click", () => {
       const c = CAREERS.find(x => x.id === el.dataset.id);
       if (c) openDetail(c);
     });
   });
-  document.getElementById("q-retry").addEventListener("click", initQuiz);
+  document.getElementById("q-retry").addEventListener("click", () => { quizCategoryFilter = "All"; initQuiz(); });
 }
 
 // ─────────────────────────────────────────────────
@@ -669,6 +752,7 @@ applyStaticTranslations();
 renderGrid();
 initQuiz();
 renderComparePage();
+renderYouthPrograms();
 </script>
 </body>
 </html>

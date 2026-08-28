@@ -140,6 +140,10 @@ body{font-family:var(--font);background:var(--gray-50);color:var(--gray-800);fon
 .qr-header i{font-size:42px;color:var(--primary);display:block;margin-bottom:10px}
 .qr-header h2{font-family:var(--font-display);font-size:21px;font-weight:800;margin-bottom:5px;letter-spacing:-.3px}
 .qr-header p{font-size:14px;color:var(--gray-600)}
+.qr-filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--gray-100)}
+.qr-filter-label{font-size:12.5px;color:var(--gray-600);font-weight:600;margin-right:2px}
+.qr-filter-chip{padding:5px 12px;font-size:12.5px}
+.qr-empty{text-align:center;font-size:14px;color:var(--gray-400);padding:1.5rem 1rem}
 .qr-match{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .18s var(--ease)}
 .qr-match:hover{filter:brightness(.97);transform:translateX(3px)}
 .qr-rank{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -169,6 +173,24 @@ body{font-family:var(--font);background:var(--gray-50);color:var(--gray-800);fon
 .no-compare{text-align:center;padding:3.5rem 1rem;color:var(--gray-400)}
 .no-compare i{font-size:42px;display:block;margin-bottom:14px;color:var(--primary-border)}
 .no-compare p{font-size:14px;color:var(--gray-600);margin-bottom:1.25rem}
+
+/* ── START IN HIGH SCHOOL ── */
+.youth-intro{margin-bottom:1.5rem}
+.youth-intro h2{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px}
+.youth-intro p{font-size:14px;color:var(--gray-600);line-height:1.6;max-width:760px}
+.youth-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:10px}
+.youth-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:1.75rem}
+.youth-card{background:#fff;border:1px solid var(--gray-100);border-radius:var(--rlg);padding:1.1rem 1.15rem;display:flex;flex-direction:column;gap:8px;transition:border-color .16s,box-shadow .16s,transform .16s var(--ease)}
+.youth-card:hover{border-color:var(--primary-border);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.youth-card-name{font-family:var(--font-display);font-weight:800;font-size:14.5px;letter-spacing:-.1px}
+.youth-card-tagline{font-size:12.5px;color:var(--gray-600);line-height:1.55;flex:1}
+.youth-card-age{display:flex;gap:6px;align-items:flex-start;font-size:11.5px;color:var(--gray-600);background:var(--gray-50);border-radius:8px;padding:7px 9px}
+.youth-card-age i{color:var(--primary);font-size:14px;margin-top:1px;flex-shrink:0}
+.youth-card-age strong{color:var(--gray-800)}
+.youth-card-link{align-self:flex-start;font-size:12.5px;font-weight:700;color:var(--primary);text-decoration:none}
+.youth-card-link:hover{text-decoration:underline}
+.step-link{display:inline-block;font-size:12.5px;font-weight:700;color:var(--primary);text-decoration:none;margin-left:4px;white-space:nowrap}
+.step-link:hover{text-decoration:underline}
 
 /* ── DETAIL ── */
 .detail-overlay{display:none;position:fixed;inset:0;background:rgba(6,44,40,.55);backdrop-filter:blur(3px);z-index:300;overflow-y:auto;padding:2rem 1rem}
