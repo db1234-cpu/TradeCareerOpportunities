@@ -74,7 +74,7 @@ const YOUTH_PROGRAMS = [
     name: "Kaiser Permanente Redwood City — Student Volunteer Program",
     tagline: "A real hospital volunteer role for teens — about 4 hours a week for a 6-month commitment, no Kaiser membership required.",
     ageNote: "Ages 16–17",
-    link: "https://volunteer-ncal.kaiserpermanente.org/",
+    link: "https://healthy.kaiserpermanente.org/northern-california/facilities/redwood-city-medical-center-100337/departments/volunteer-services-dlp-106471/",
     sourceLabel: "Kaiser Permanente",
     es: {
       name: "Kaiser Permanente Redwood City — Programa de Voluntariado Estudiantil",
